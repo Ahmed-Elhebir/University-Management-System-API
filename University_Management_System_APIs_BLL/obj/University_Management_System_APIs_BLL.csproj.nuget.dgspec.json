@@ -1,0 +1,224 @@
+{
+  "format": 1,
+  "restore": {
+    "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_BLL\\University_Management_System_APIs_BLL.csproj": {}
+  },
+  "projects": {
+    "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_BLL\\University_Management_System_APIs_BLL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_BLL\\University_Management_System_APIs_BLL.csproj",
+        "projectName": "University_Management_System_APIs_BLL",
+        "projectPath": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_BLL\\University_Management_System_APIs_BLL.csproj",
+        "packagesPath": "C:\\Users\\ah_ee\\.nuget\\packages\\",
+        "outputPath": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_BLL\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\ah_ee\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_DAL\\University_Management_System_APIs_DAL.csproj": {
+                "projectPath": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_DAL\\University_Management_System_APIs_DAL.csproj"
+              },
+              "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_Global\\University_Management_System_APIs_Global.csproj": {
+                "projectPath": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_Global\\University_Management_System_APIs_Global.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200-preview.0.26103.119/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_DAL\\University_Management_System_APIs_DAL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_DAL\\University_Management_System_APIs_DAL.csproj",
+        "projectName": "University_Management_System_APIs_DAL",
+        "projectPath": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_DAL\\University_Management_System_APIs_DAL.csproj",
+        "packagesPath": "C:\\Users\\ah_ee\\.nuget\\packages\\",
+        "outputPath": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_DAL\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\ah_ee\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_Global\\University_Management_System_APIs_Global.csproj": {
+                "projectPath": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_Global\\University_Management_System_APIs_Global.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[7.0.0-preview3.25342.7, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[10.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200-preview.0.26103.119/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_Global\\University_Management_System_APIs_Global.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_Global\\University_Management_System_APIs_Global.csproj",
+        "projectName": "University_Management_System_APIs_Global",
+        "projectPath": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_Global\\University_Management_System_APIs_Global.csproj",
+        "packagesPath": "C:\\Users\\ah_ee\\.nuget\\packages\\",
+        "outputPath": "H:\\C# Projects\\02_University_Management_System_APIs\\University_Management_System_APIs_Global\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\ah_ee\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200-preview.0.26103.119/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

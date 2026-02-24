@@ -1,0 +1,337 @@
+﻿using University_Management_System_APIs_DAL;
+using University_Management_System_APIs_Global;
+using University_Management_System_APIs_Global.DTOs.Enrollment;
+using University_Management_System_APIs_Global.Enums;
+
+namespace University_Management_System_APIs_BLL
+{
+    public class EnrollmentService
+    {
+        private ModeEnum _Mode = ModeEnum.AddNew;
+
+        public AddEnrollmentDTO AEDTO
+        {
+            get { return new AddEnrollmentDTO(this.StudentID, this.CourseID, this.EnrollmentDate, this.CreatedByUserID); }
+        }
+
+        private UpdateEnrollmentDTO UEDTO
+        {
+            get { return new UpdateEnrollmentDTO(this.EnrollmentDate); }
+        }
+
+        public EnrollmentDTO EDTO
+        {
+            get { 
+                return new EnrollmentDTO(this.EnrollmentID, this.StudentID, this.CourseID, this.EnrollmentDate, this.Grade,
+                this.CreatedDate, this.ModifiedDate, this.CreatedByUserID, this.IsDeleted); }
+        }
+
+
+        public int EnrollmentID { get; set; }
+        public int StudentID { get; set; }
+        public int CourseID { get; set; }
+        public DateTime EnrollmentDate { get; set; }
+        public decimal? Grade { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public int CreatedByUserID { get; set; }
+        public bool IsDeleted { get; set; }
+
+
+        public EnrollmentService()
+        {
+            this.EnrollmentID = -1;
+            this.StudentID = -1;
+            this.CourseID = -1;
+            this.EnrollmentDate = DateTime.Now;
+            this.Grade = 0.00m;
+            this.CreatedDate = DateTime.Now;
+            this.ModifiedDate = DateTime.Now;
+            this.CreatedByUserID = -1;
+            this.IsDeleted = false;
+
+            _Mode = ModeEnum.AddNew;
+        }
+
+        public EnrollmentService(EnrollmentDTO enrollmentDTO, ModeEnum mode = ModeEnum.AddNew)
+        {
+            this.EnrollmentID = enrollmentDTO.EnrollmentID;
+            this.StudentID = enrollmentDTO.StudentID;
+            this.CourseID = enrollmentDTO.CourseID;
+            this.EnrollmentDate = enrollmentDTO.EnrollmentDate;
+            this.Grade = enrollmentDTO.Grade;
+            this.CreatedDate = enrollmentDTO.CreatedDate;
+            this.ModifiedDate = enrollmentDTO.ModifiedDate;
+            this.CreatedByUserID = enrollmentDTO.CreatedByUserID;
+            this.IsDeleted = enrollmentDTO.IsDeleted;
+
+            _Mode = mode;
+        }
+
+        public static OperationResult<List<EnrollmentsListDTO>> GetAllEnrollments()
+        {
+            var result = EnrollmentData.GetAllEnrollments();
+
+            if (!result.IsSuccess || result.Data == null)
+                return OperationResult<List<EnrollmentsListDTO>>.Failure("Failed to retrieve data");
+
+            return OperationResult<List<EnrollmentsListDTO>>.Success(result.Data, "Retrieved data successfully");
+        }
+
+        public static OperationResult<int> GetNumberOfEnrollmentsForCourse(int courseID)
+        {
+            if (!Validation.ValidateID(courseID))
+                return OperationResult<int>.Failure("Invalid Course ID");
+
+            var result = EnrollmentData.GetNumberOfEnrollmentsForCourse(courseID);
+
+            if (!result.IsSuccess || result.Data == null)
+                return OperationResult<int>.Failure(result.Message);
+
+            var returnValue = _CheckReturnValue((EnrollmentReturnValueEnum)result.Data.ReturnValue);
+
+            if (!returnValue.IsSuccess)
+                return OperationResult<int>.Failure(returnValue.Message);
+
+            return OperationResult<int>.Success(Convert.ToInt32(result.Data.EnrollmentCount));
+        }
+
+        public static OperationResult<EnrollmentService> Find(int enrollmentID)
+        {
+            if (enrollmentID < 1)
+                return OperationResult<EnrollmentService>.Failure("Invalid Enrollment ID");
+
+            var result = EnrollmentData.GetEnrollmentByID(enrollmentID);
+            if (!result.IsSuccess || result.Data == null)
+                return OperationResult<EnrollmentService>.Failure("Enrollment not found");
+
+            var enrollment = new EnrollmentService(result.Data, ModeEnum.Update);
+            enrollment.EnrollmentID = enrollmentID;
+
+            return OperationResult<EnrollmentService>.Success(enrollment);
+        }
+
+        public static OperationResult<List<EnrollmentDTO>> FindByStudentID(int studentID)
+        {
+            if (!Validation.ValidateID(studentID))
+                return OperationResult<List<EnrollmentDTO>>.Failure("Invalid Student ID");
+
+            var result = EnrollmentData.GetEnrollmentByStudentID(studentID);
+
+            if (!result.IsSuccess)
+                return OperationResult<List<EnrollmentDTO>>.Failure(result.Message);
+
+            var returnValue = _CheckReturnValue((EnrollmentReturnValueEnum)result.Data.OutputValues["@RETURN_VALUE"]);
+
+            if (!returnValue.IsSuccess)
+                return OperationResult<List<EnrollmentDTO>>.Failure(returnValue.Message);
+
+            return OperationResult<List<EnrollmentDTO>>.Success(result.Data.Data);
+        }
+
+        public static OperationResult<List<EnrollmentDTO>> FindByCourseID(int courseID)
+        {
+            if (!Validation.ValidateID(courseID))
+                return OperationResult<List<EnrollmentDTO>>.Failure("Invalid Course ID");
+
+            var result = EnrollmentData.GetEnrollmentByCourseID(courseID);
+
+            if (!result.IsSuccess)
+                return OperationResult<List<EnrollmentDTO>>.Failure(result.Message);
+
+            var returnValue = _CheckReturnValue((EnrollmentReturnValueEnum)result.Data.OutputValues["@RETURN_VALUE"]);
+
+            if (!returnValue.IsSuccess)
+                return OperationResult<List<EnrollmentDTO>>.Failure(returnValue.Message);
+
+            return OperationResult<List<EnrollmentDTO>>.Success(result.Data.Data);
+        }
+
+        public static OperationResult<decimal> StudentGPA(int studentID)
+        {
+            if (!Validation.ValidateID(studentID))
+                return OperationResult<decimal>.Failure("Invalid Student ID");
+
+            var result = EnrollmentData.GetStudentGPA(studentID);
+
+            if (!result.IsSuccess || result.Data == null)
+                return OperationResult<decimal>.Failure(result.Message);
+
+            var returnValue = _CheckReturnValue((EnrollmentReturnValueEnum)result.Data.ReturnValue);
+
+            if (!returnValue.IsSuccess)
+                return OperationResult<decimal>.Failure(returnValue.Message);
+
+            return OperationResult<decimal>.Success(Convert.ToDecimal(result.Data.StudentGPA));
+        }
+
+        public static OperationResult Delete(int enrollmentID)
+        {
+            if (!Validation.ValidateID(enrollmentID))
+                return OperationResult.Failure("Invalid Enrollment ID");
+
+            var delete = EnrollmentData.UnEnroll(enrollmentID);
+
+            var returnedValue = _CheckReturnValue((EnrollmentReturnValueEnum)delete.Data);
+            if (!returnedValue.IsSuccess)
+                return OperationResult.Failure(returnedValue.Message);
+
+            return OperationResult.Success("Unenrolled successfully");
+        }
+
+        private OperationResult _CheckEnrollmentValidation()
+        {
+            List<string> errors = new List<string>();
+
+            if (!Validation.ValidateID(this.StudentID))
+                errors.Add("Invalid Student ID");
+
+            if (!Validation.ValidateID(this.CourseID))
+                errors.Add("Invalid Course ID");
+
+            if (!Validation.ValidateDate(this.EnrollmentDate))
+                errors.Add("Enrollment date cannot be in the future");
+
+            if (Grade != null && !Validation.ValidateGrade((decimal)Grade))
+                errors.Add("Grade is invalid");
+
+            if (errors.Count > 0)
+                return OperationResult.Failure(errors);
+
+            return OperationResult.Success("Passed validation");
+        }
+
+        private static OperationResult _CheckReturnValue(EnrollmentReturnValueEnum returnValue)
+        {
+            switch (returnValue)
+            {
+                case EnrollmentReturnValueEnum.SUCCESS:
+                    return OperationResult.Success("Enrollment added successfully");
+
+                case EnrollmentReturnValueEnum.STUDENT_NOT_EXIST:
+                    return OperationResult.Failure("Student not found");
+
+                case EnrollmentReturnValueEnum.STUDENT_ALREADY_ENROLLED:
+                    return OperationResult.Failure("Student is already enrolled in the course");
+
+                case EnrollmentReturnValueEnum.COURSE_NOT_EXIST:
+                    return OperationResult.Failure("Course not found");
+
+                case EnrollmentReturnValueEnum.COURSE_IS_FULL:
+                    return OperationResult.Failure("Course is full");
+
+                case EnrollmentReturnValueEnum.ENROLLMENT_NOT_EXIST:
+                    return OperationResult.Failure("Enrollment not found");
+
+                case EnrollmentReturnValueEnum.FINAL_GRADE_ALREADY_ASSIGNED:
+                    return OperationResult.Failure("Final grade has already been assigned for this enrollment");
+
+                case EnrollmentReturnValueEnum.NO_GRADED_ENROLLMENTS_FOUND:
+                    return OperationResult.Failure("No graded enrollments found for this student");
+
+                case EnrollmentReturnValueEnum.CANNOT_DELETE_ENROLLMENT_WITH_FINAL_GRADE:
+                    return OperationResult.Failure("Cannot delete enrollment with a final grade assigned");
+
+                case EnrollmentReturnValueEnum.UNEXPECTED_EXCEPTION:
+                    return OperationResult.Failure("An unexpected error occurred. Please try again later");
+
+                default:
+                    return OperationResult.Failure($"Unknown error occurred (Code: {returnValue}");
+            }
+        }
+
+        private OperationResult<EnrollmentDataResult> _AddNewEnrollment()
+        {
+            var validationResult = _CheckEnrollmentValidation();
+            if (!validationResult.IsSuccess)
+                return OperationResult<EnrollmentDataResult>.Failure(validationResult.Message);
+
+            var result = EnrollmentData.AddNewEnrollment(AEDTO);
+
+            if (!result.IsSuccess || result.Data == null)
+                return OperationResult<EnrollmentDataResult>.Failure(result.Message);
+
+            var returnValueCheck = _CheckReturnValue((EnrollmentReturnValueEnum)result.Data.ReturnValue);
+            if (!returnValueCheck.IsSuccess)
+                return OperationResult<EnrollmentDataResult>.Failure(returnValueCheck.Message);
+
+            if (!result.Data.NewEnrollmentID.HasValue)
+                return OperationResult<EnrollmentDataResult>.Failure("Failed to retrieve new Enrollment ID");
+
+            this.EnrollmentID = (int)result.Data.NewEnrollmentID;
+
+            return OperationResult<EnrollmentDataResult>.Success(result.Data, "Enrollment added successfully");
+        }
+
+        public OperationResult Update(UpdateEnrollmentDTO updateEnrollmentDTO)
+        {
+            this.EnrollmentDate = updateEnrollmentDTO.EnrollmentDate;
+
+            var validation = _CheckEnrollmentValidation();
+            if (!validation.IsSuccess)
+                return validation;
+
+
+            return Save();
+        }
+
+        private OperationResult _UpdateEnrollment()
+        {
+            var result = EnrollmentData.UpdateEnrollment(this.EnrollmentID, UEDTO);
+
+            if (!result.IsSuccess)
+                return OperationResult.Failure(result.Message);
+
+            return OperationResult.Success("Enrollment updated successfully");
+        }
+
+        public static OperationResult UpdateGrade(int enrollmentID, decimal grade)
+        {
+            if (!Validation.ValidateID(enrollmentID))
+                return OperationResult.Failure("Invalid Enrollment ID");
+
+            if (!Validation.ValidateGrade(grade))
+                return OperationResult.Failure("Grade is invalid");
+
+            var result = EnrollmentData.UpdateGrade(enrollmentID, grade);
+
+            if (!result.IsSuccess || result.Data == null)
+                return OperationResult.Failure(result.Message);
+
+            var returnValue = _CheckReturnValue((EnrollmentReturnValueEnum)result.Data.ReturnValue);
+
+            if (!returnValue.IsSuccess)
+                return OperationResult.Failure(returnValue.Message);
+
+            return OperationResult.Success("Grade updated successfully");
+        }
+
+        public static EnrollmentService CreateFromDTO(AddEnrollmentDTO addEnrollmentDTO)
+        {
+            var enrollment = new EnrollmentService();
+
+            enrollment.StudentID = addEnrollmentDTO.StudentID;
+            enrollment.CourseID = addEnrollmentDTO.CourseID;
+            enrollment.EnrollmentDate = addEnrollmentDTO.EnrollmentDate;
+            enrollment.CreatedByUserID = addEnrollmentDTO.CreatedByUserID;
+
+            return enrollment;
+        }
+
+        public OperationResult Save()
+        {
+            switch (_Mode)
+            {
+                case ModeEnum.AddNew:
+                    var result = _AddNewEnrollment();
+                    if (result.IsSuccess)
+                        _Mode = ModeEnum.Update;
+                    return result.ToNonGeneric();
+                case ModeEnum.Update:
+                    return _UpdateEnrollment();
+                default:
+                    return OperationResult.Failure("Invalid operation mode");
+            }
+        }
+    }
+}

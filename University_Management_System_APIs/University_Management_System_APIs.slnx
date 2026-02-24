@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../University_Management_System_APIs_BLL/University_Management_System_APIs_BLL.csproj" />
+  <Project Path="../University_Management_System_APIs_DAL/University_Management_System_APIs_DAL.csproj" />
+  <Project Path="../University_Management_System_APIs_Global/University_Management_System_APIs_Global.csproj" />
+  <Project Path="University_Management_System_APIs.csproj" />
+</Solution>

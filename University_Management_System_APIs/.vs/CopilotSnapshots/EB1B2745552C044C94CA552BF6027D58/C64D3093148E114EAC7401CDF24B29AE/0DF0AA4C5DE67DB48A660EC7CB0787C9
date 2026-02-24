@@ -1,0 +1,121 @@
+﻿
+
+using Microsoft.Data.SqlClient;
+using System.Data;
+using University_Management_System_APIs_DAL.Extensions;
+using University_Management_System_APIs_Global;
+using University_Management_System_APIs_Global.DTOs.Student;
+
+namespace University_Management_System_APIs_DAL
+{
+    public class StudentData
+    {
+        public static OperationResult<List<StudentsListDTO>> GetAllStudents()
+        {
+            return DBHelper.ExecuteQuery("SP_GetAllStudentsList", null, reader => reader.ToStudentsListDTO());
+        }
+
+        public static OperationResult<StudentDTO> GetStudentByID(int studentID)
+        {
+            var parameter = new Dictionary<string, object>
+            {
+                { "@StudentID", studentID }
+            };
+
+            return DBHelper.ExecuteSingleRow<StudentDTO>("SP_GetStudentByID", parameter, reader => reader.ToStudentDTO());
+        }
+        
+        public static OperationResult<StudentsListDTO> GetStudentByStudentNo(string studentNo)
+        {
+            var parameter = new Dictionary<string, object>
+            {
+                { "@StudentNo", studentNo }
+            };
+
+            return DBHelper.ExecuteSingleRow<StudentsListDTO>("SP_GetStudentByStudentNo", parameter, reader => reader.ToStudentsListDTO());
+            
+        }
+        
+        public static OperationResult<StudentDataResult> AddNewStudent(AddStudentDTO addStudentDTO)
+        {
+            var inputParameters = new Dictionary<string, object>
+            {
+                { "@FirstName", addStudentDTO.AddPersonDTO.FirstName },
+                { "@SecondName", addStudentDTO.AddPersonDTO.SecondName },
+                { "@ThirdName", addStudentDTO.AddPersonDTO.ThirdName ?? "" },
+                { "@LastName", addStudentDTO.AddPersonDTO.LastName },
+                { "@Gender", addStudentDTO.AddPersonDTO.Gender },
+                { "@PhoneNumber", addStudentDTO.AddPersonDTO.PhoneNumber },
+                { "@Email", addStudentDTO.AddPersonDTO.Email ?? "" },
+                { "@DateOfBirth", addStudentDTO.AddPersonDTO.DateOfBirth },
+                { "@NationalNumber", addStudentDTO.AddPersonDTO.NationalNumber },
+                { "@NationalCountryID", addStudentDTO.AddPersonDTO.NationalCountryID },
+                { "@StudentMajor", addStudentDTO.StudentMajor },
+                { "@StudyYear", addStudentDTO.StudyYear },
+                { "@StudySemester", addStudentDTO.StudySemester },
+                { "@CreatedByUserID", addStudentDTO.CreatedByUserID }
+            };
+
+            var ouputParameters = new Dictionary<string, OutputParameter>()
+            {
+                { "@RETURN_VALUE", new OutputParameter(SqlDbType.Int) },
+                { "@NewPersonID", new OutputParameter(SqlDbType.Int) },
+                { "@NewStudentID", new OutputParameter(SqlDbType.Int) },
+                { "@NewStudentNo", new OutputParameter(SqlDbType.NVarChar, 50) }
+            };
+
+            var result = DBHelper.ExecuteNonQueryWithOutput("SP_AddNewStudent", inputParameters, ouputParameters);
+
+            if (!result.IsSuccess)
+                return OperationResult<StudentDataResult>.Failure(result.Message);
+
+            if (result.Data != null)
+            {
+                var studentDataResult = new StudentDataResult
+                (
+                    Convert.ToInt32(result.Data["@NewPersonID"]),
+                    Convert.ToInt32(result.Data["@NewStudentID"]),
+                    Convert.ToString(result.Data["@NewStudentNo"]),
+                    Convert.ToInt32(result.Data["@RETURN_VALUE"])
+                );
+
+                return OperationResult<StudentDataResult>.Success(studentDataResult);
+            }
+
+            return OperationResult<StudentDataResult>.Failure(result.Message);
+        }
+
+        public static OperationResult UpdateStudent(int studentID, StudentDTO studentDTO)
+        {
+            var inputParameters = new Dictionary<string, object>()
+            {
+                { "@StudentID", studentID },
+                { "@StudentMajor", studentDTO.StudentMajor },
+                { "@StudyYear", studentDTO.StudyYear },
+                { "@StudySemester", studentDTO.StudySemester },
+                { "@FirstName", studentDTO.PersonDTO.FirstName },
+                { "@SecondName", studentDTO.PersonDTO.SecondName },
+                { "@ThirdName", studentDTO.PersonDTO.ThirdName ?? (object)DBNull.Value },
+                { "@LastName", studentDTO.PersonDTO.LastName },
+                { "@Gender", studentDTO.PersonDTO.Gender },
+                { "@PhoneNumber", studentDTO.PersonDTO.PhoneNumber },
+                { "@Email", studentDTO.PersonDTO.Email ?? (object)DBNull.Value },
+                { "@DateOfBirth", studentDTO.PersonDTO.DateOfBirth },
+                { "@NationalNumber", studentDTO.PersonDTO.NationalNumber },
+                { "@NationalCountryID", studentDTO.PersonDTO.NationalCountryID }
+            };
+
+            return DBHelper.ExecuteNonQuery("SP_UpdateStudent", inputParameters);
+        }
+
+        public static OperationResult<object> DeleteStudent(int personID)
+        {
+            var parameter = new Dictionary<string, object>
+            {
+                { "@PersonID", personID }
+            };
+
+            return DBHelper.ExecuteScalar("SP_DeleteStudent", parameter);
+        }
+    }
+}
